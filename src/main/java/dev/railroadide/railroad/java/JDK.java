@@ -116,7 +116,7 @@ public final class JDK {
                 }
             }
 
-            Properties props = JDKManager.readReleaseProperties(jdk.path());
+            Properties props = JDKUtils.readReleaseProperties(jdk.path());
             String implVendor = props.getProperty("IMPLEMENTOR", "").toLowerCase(Locale.ROOT);
             for (Brand brand : values()) {
                 if (brand == UNKNOWN)

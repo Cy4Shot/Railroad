@@ -112,7 +112,7 @@ public class DetectedJdkListPane extends RRVBox {
                 } catch (Exception exception) {
                     Railroad.LOGGER.error("Failed to load image icon for JDK brand {}", brand.name(), exception);
                 }
-            } else {
+            } else if(brand.isIkon()) {
                 var icon = new FontIcon(brand.getIcon());
                 icon.setIconSize(20);
                 iconView = icon;
@@ -129,7 +129,7 @@ public class DetectedJdkListPane extends RRVBox {
             String version = item.version() != null
                 ? item.version().toReleaseString()
                 : L18n.localize("railroad.settings.ide.jdk_management.detected.unknown_version");
-            if (version.endsWith(".0")) {
+            if (version.endsWith(".0") && version.length() > 2) {
                 version = version.substring(0, version.length() - 2);
             }
             versionLabel.setKey("railroad.settings.ide.jdk_management.detected.version", version);

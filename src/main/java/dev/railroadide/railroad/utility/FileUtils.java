@@ -13,7 +13,7 @@ import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -413,5 +413,36 @@ public final class FileUtils {
         } catch (IOException exception) {
             throw new RuntimeException("Failed to copy directory contents", exception);
         }
+    }
+
+    /**
+     * Normalizes a collection of paths by converting them to absolute paths and removing duplicates.
+     *
+     * @param paths the collection of paths to normalize
+     * @return a list of normalized paths
+     */
+    public static List<Path> normalizePaths(Collection<Path> paths) {
+        if (paths == null || paths.isEmpty())
+            return Collections.emptyList();
+
+        Set<Path> normalized = new LinkedHashSet<>();
+        for (Path path : paths) {
+            normalized.add(normalizePath(path));
+        }
+
+        return new ArrayList<>(normalized);
+    }
+
+    /**
+     * Normalizes a path by converting it to an absolute path.
+     *
+     * @param path the path to normalize
+     * @return the normalized path
+     */
+    public static Path normalizePath(Path path) {
+        if (path == null)
+            return null;
+
+        return path.toAbsolutePath().normalize();
     }
 }

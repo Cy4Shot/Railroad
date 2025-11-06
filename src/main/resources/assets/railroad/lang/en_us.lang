@@ -73,6 +73,33 @@ settings.tree.keybinds=Keybinds
 railroad.settings.general.language.title=Language
 railroad.settings.general.language.description=Select the language for the Railroad interface.
 
+railroad.settings.directories.empty=No directories configured yet.
+railroad.settings.directories.add.tooltip=Add a directory to this list.
+railroad.settings.directories.add.title=Choose a Directory
+railroad.settings.directories.remove.tooltip=Remove the selected directory from this list.
+
+railroad.settings.files.empty=No files selected yet.
+railroad.settings.files.add.tooltip=Add a file to this list.
+railroad.settings.files.add.title=Choose a File
+railroad.settings.files.remove.tooltip=Remove the selected file from this list.
+
+railroad.settings.ide.jdk_management.title=JDK Management
+railroad.settings.ide.jdk_management.description=Control how Railroad discovers and manages installed JDKs.
+railroad.settings.ide.jdk_management.additional_jdk_scan_paths.title=Additional Scan Paths
+railroad.settings.ide.jdk_management.additional_jdk_scan_paths.description=Scan these directories in addition to the default locations when searching for JDKs.
+railroad.settings.ide.jdk_management.excluded_jdk_scan_paths.title=Excluded Scan Paths
+railroad.settings.ide.jdk_management.excluded_jdk_scan_paths.description=Never scan these directories when looking for JDK installations.
+railroad.settings.ide.jdk_management.additional_jdks.title=Additional JDKs
+railroad.settings.ide.jdk_management.additional_jdks.description=Always include these specific JDK installations even if they are not discovered automatically.
+railroad.settings.ide.jdk_management.detected.title=Detected JDKs
+railroad.settings.ide.jdk_management.detected.refresh.tooltip=Rescan your system for installed JDKs
+railroad.settings.ide.jdk_management.detected.empty=No JDKs detected yet.
+railroad.settings.ide.jdk_management.detected.count=Detected JDKs: %d
+railroad.settings.ide.jdk_management.detected.unknown_version=Unknown Version
+railroad.settings.ide.jdk_management.detected.version=Java %s
+railroad.settings.ide.jdk_management.detected.name=Distribution: %s
+railroad.settings.ide.jdk_management.detected.path=Path: %s
+
 # Keybind settings
 railroad.settings.keybinds.title=Keybinds
 

@@ -2,6 +2,8 @@ package dev.railroadide.railroad;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import dev.railroadide.core.utility.ServiceLocator;
 import dev.railroadide.logger.Logger;
 import dev.railroadide.logger.LoggerManager;
@@ -102,7 +104,7 @@ public class Railroad extends Application {
             new InitializationStep("Preparing settings handler", SettingsHandler::init),
             new InitializationStep("Preparing themes", ThemeManager::init),
             new InitializationStep("Binding service locator", () -> ServiceLocator.setServiceProvider(Services::getService)),
-            new InitializationStep("Finding Java versions", JDKManager::init),
+            new InitializationStep("Finding Java versions", JDKManager::refreshJDKs),
             new InitializationStep("Loading language", () -> L18n.loadLanguage(SettingsHandler.getValue(Settings.LANGUAGE))),
             new InitializationStep("Initializing repositories", SwitchboardRepositories::initialize),
             new InitializationStep("Loading mapping channels", MappingChannelRegistry::initialize),
@@ -152,6 +154,7 @@ public class Railroad extends Application {
         }
 
         try {
+            SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
             WINDOW_MANAGER.showPrimary(
                 primaryStage,
                 new Scene(new WelcomePane()),

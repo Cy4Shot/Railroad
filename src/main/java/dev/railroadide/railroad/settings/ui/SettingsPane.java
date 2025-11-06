@@ -125,11 +125,20 @@ public class SettingsPane extends RRVBox {
             }
 
             pathLabel.setText(pathBuilder.toString());
-            settingsContentBox.getChildren().setAll(SettingsUIHandler.createSettingsSection(
+            var vbox = SettingsUIHandler.createSettingsSection(
                 SettingsHandler.SETTINGS_REGISTRY.values(),
                 parts[parts.length - 1],
                 applyListeners
-            ));
+            );
+
+            // TODO: Temporary until we add a decorations system.
+            if ("ide".equals(parts[parts.length - 1])) {
+                var detectedPane = new DetectedJdkListPane();
+                VBox.setMargin(detectedPane, new Insets(10, 10, 0, 10));
+                vbox.getChildren().add(detectedPane);
+            }
+
+            settingsContentBox.getChildren().setAll(vbox);
         });
 
         var searchHandler = new SettingsSearchHandler(SettingsHandler.SETTINGS_REGISTRY.values());

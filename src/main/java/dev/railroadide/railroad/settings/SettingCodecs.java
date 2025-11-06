@@ -10,10 +10,14 @@ import dev.railroadide.railroad.localization.Languages;
 import dev.railroadide.railroad.plugin.PluginManager;
 import dev.railroadide.railroad.plugin.ui.PluginsPane;
 import dev.railroadide.railroad.settings.keybinds.KeybindsList;
+import dev.railroadide.railroad.settings.ui.AbstractPathListPane;
+import dev.railroadide.railroad.settings.ui.DirectoryListPane;
+import dev.railroadide.railroad.settings.ui.FileListPane;
 import dev.railroadide.railroad.theme.ui.ThemeSettingsSection;
 import dev.railroadide.railroadpluginapi.PluginDescriptor;
 import javafx.scene.control.ComboBox;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -64,5 +68,23 @@ public class SettingCodecs {
             .valueToNode((keybindsMap, keybindsList) -> keybindsList.loadKeybinds(keybindsMap))
             .jsonEncoder(KeybindsList::toJson)
             .jsonDecoder(KeybindsList::fromJson)
+            .build();
+
+    public static final SettingCodec<List<Path>, DirectoryListPane> DIRECTORY_PATH_LIST =
+        SettingCodec.<List<Path>, DirectoryListPane>builder("railroad:directory_path_list")
+            .createNode(DirectoryListPane::new)
+            .nodeToValue(DirectoryListPane::getDirectories)
+            .valueToNode((directories, pane) -> pane.setDirectories(directories))
+            .jsonEncoder(AbstractPathListPane::toJson)
+            .jsonDecoder(AbstractPathListPane::fromJson)
+            .build();
+
+    public static final SettingCodec<List<Path>, FileListPane> FILE_PATH_LIST =
+        SettingCodec.<List<Path>, FileListPane>builder("railroad:file_path_list")
+            .createNode(FileListPane::new)
+            .nodeToValue(FileListPane::getFiles)
+            .valueToNode((files, pane) -> pane.setFiles(files))
+            .jsonEncoder(AbstractPathListPane::toJson)
+            .jsonDecoder(AbstractPathListPane::fromJson)
             .build();
 }

@@ -13,6 +13,7 @@ import dev.railroadide.railroad.settings.keybinds.KeybindHandler;
 import dev.railroadide.railroad.theme.ThemeManager;
 import dev.railroadide.railroadpluginapi.PluginDescriptor;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,6 +125,27 @@ public final class Settings {
             }
         })
         .defaultValue(new HashMap<>())
+        .build());
+
+    public static final Setting<List<Path>> ADDITIONAL_JDK_SCAN_PATHS = registerSetting(Setting.builder(new TypeToken<List<Path>>() {}, "railroad:additional_jdk_scan_paths")
+        .treePath("ide")
+        .category(SettingCategory.simple("railroad:ide.jdk_management"))
+        .codec(SettingCodecs.DIRECTORY_PATH_LIST)
+        .defaultValue(List.of())
+        .build());
+
+    public static final Setting<List<Path>> EXCLUDED_JDK_SCAN_PATHS = registerSetting(Setting.builder(new TypeToken<List<Path>>() {}, "railroad:excluded_jdk_scan_paths")
+        .treePath("ide")
+        .category(SettingCategory.simple("railroad:ide.jdk_management"))
+        .codec(SettingCodecs.DIRECTORY_PATH_LIST)
+        .defaultValue(List.of())
+        .build());
+
+    public static final Setting<List<Path>> ADDITIONAL_JDKS = registerSetting(Setting.builder(new TypeToken<List<Path>>() {}, "railroad:additional_jdks")
+        .treePath("ide")
+        .category(SettingCategory.simple("railroad:ide.jdk_management"))
+        .codec(SettingCodecs.FILE_PATH_LIST)
+        .defaultValue(List.of())
         .build());
 
     public static void initialize() {

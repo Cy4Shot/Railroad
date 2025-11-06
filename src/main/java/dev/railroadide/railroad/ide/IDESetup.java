@@ -11,13 +11,11 @@ import dev.railroadide.core.ui.localized.LocalizedCheckMenuItem;
 import dev.railroadide.core.ui.localized.LocalizedLabel;
 import dev.railroadide.core.ui.localized.LocalizedMenu;
 import dev.railroadide.core.ui.localized.LocalizedMenuItem;
+import dev.railroadide.core.utility.OperatingSystem;
 import dev.railroadide.railroad.Railroad;
 import dev.railroadide.railroad.Services;
 import dev.railroadide.railroad.ide.projectexplorer.ProjectExplorerPane;
-import dev.railroadide.railroad.ide.ui.ConsolePane;
-import dev.railroadide.railroad.ide.ui.IDEWelcomePane;
-import dev.railroadide.railroad.ide.ui.ImageViewerPane;
-import dev.railroadide.railroad.ide.ui.StatusBarPane;
+import dev.railroadide.railroad.ide.ui.*;
 import dev.railroadide.railroad.project.Project;
 import dev.railroadide.railroad.settings.keybinds.KeybindHandler;
 import dev.railroadide.railroad.settings.ui.SettingsPane;
@@ -61,7 +59,7 @@ public class IDESetup {
      */
     public static Scene createIDEScene(Project project) {
         var root = new RRBorderPane();
-        //root.setTop(createMenuBar()); // TODO: This doesn't work in production
+        root.setTop(createMenuBar());
 
         var leftPane = new DetachableTabPane();
         leftPane.addTab("Project", new ProjectExplorerPane(project, root));
@@ -301,7 +299,9 @@ public class IDESetup {
         toolsMenu.getStyleClass().add("rr-menu");
 
         var menuBar = new RRMenuBar(true, fileMenu, editMenu, viewMenu, runMenu, toolsMenu);
-        menuBar.setUseSystemMenuBar(true);
+        if(OperatingSystem.isMac()) {
+            menuBar.useSystemMenuBarProperty().set(true);
+        }
         menuBar.getStyleClass().add("rr-menu-bar");
         return menuBar;
     }

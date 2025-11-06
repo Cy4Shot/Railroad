@@ -77,6 +77,7 @@ dependencies {
     implementation 'net.java.dev.jna:jna:5.18.1'
     implementation 'org.xerial:sqlite-jdbc:3.50.3.0'
     implementation 'com.github.numind-tech:javafxsvg:ce188ef95d'
+    implementation 'io.github.raghul-tech:javafx-markdown-preview-all:1.0.3'
 
     implementation 'com.google.guava:guava:33.5.0-jre'
     implementation 'org.apache.maven:maven-core:4.0.0-rc-4'

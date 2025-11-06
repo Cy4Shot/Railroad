@@ -11,6 +11,10 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -57,7 +61,9 @@ public class L18n {
         try {
             InputStream langFileStream = PluginManager.loadResource(descriptor, langFileName);
             if (langFileStream != null) {
-                LANG_CACHE.load(langFileStream);
+                try (var reader = new InputStreamReader(langFileStream, StandardCharsets.UTF_8)) {
+                    LANG_CACHE.load(reader);
+                }
                 LOGGER.debug("Language file {} loaded for plugin {}", langFileName, descriptor.getId());
 
                 CURRENT_LANG.setValue(language);
@@ -100,24 +106,26 @@ public class L18n {
      * @throws IOException if an error occurs while reading the language file
      */
     private static Properties getLanguageProperties(String name, List<InputStream> pluginResources) throws IOException {
-        var languageFiles = new InputStream[pluginResources.size() + 1];
-        languageFiles[0] = AppResources.getResourceAsStream(name);
-        for (int i = 0; i < pluginResources.size(); i++) {
-            languageFiles[i + 1] = pluginResources.get(i);
-        }
+        String base = "lang/en_us.lang";
 
-        Properties props = mergeLanguageFiles(languageFiles);
-        for (InputStream stream : languageFiles) {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException exception) {
-                    LOGGER.error("Error closing language file stream", exception);
-                }
-            }
-        }
+        List<InputStream> streams = new ArrayList<>();
 
-        return props;
+        // setting base language
+        InputStream appBase = AppResources.getResourceAsStream(base);
+        if (appBase != null) {
+            streams.add(appBase);
+        }
+        List<InputStream> pluginBaseResources = PluginManager.loadResourcesFromAllPlugins(base);
+        streams.addAll(pluginBaseResources);
+
+        // setting name language
+        InputStream appCurrent = AppResources.getResourceAsStream(name);
+        if (appCurrent != null) {
+            streams.add(appCurrent);
+        }
+        streams.addAll(pluginResources);
+
+        return mergeLanguageFiles(streams.toArray(InputStream[]::new));
     }
 
     private static void setProps(Properties properties) {
@@ -132,7 +140,11 @@ public class L18n {
             if (stream == null)
                 continue;
 
-            mergedProperties.load(stream);
+            try (Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                var tempProperties = new Properties();
+                tempProperties.load(reader);
+                mergedProperties.putAll(tempProperties);
+            }
         }
 
         return mergedProperties;
@@ -145,22 +157,21 @@ public class L18n {
      * @return the localized string
      */
     public static String localize(String key) {
-        if (key != null && key.isBlank())
-            return "";
-
-        LOGGER.debug("Getting localized string for key {}", key);
-
         if (key == null) {
             LOGGER.error("Localize called with null key");
             return "null";
         }
 
-        if (LANG_CACHE.get(key) == null) {
+        if (key.isBlank())
+            return "";
+
+        Object value = LANG_CACHE.get(key);
+        if (value == null) {
             LOGGER.error("Error finding translations for key '{}' in language {}", key, CURRENT_LANG.getValue());
             return key;
         }
 
-        return LANG_CACHE.get(key).toString();
+        return value.toString();
     }
 
     /**
@@ -184,6 +195,7 @@ public class L18n {
      * @return true if the key is valid, false otherwise
      */
     public static boolean isKeyValid(String key) {
-        return LANG_CACHE.get(key) != null && LANG_CACHE.get(key) != "";
+        Object value = LANG_CACHE.get(key);
+        return value != null && !value.toString().isEmpty();
     }
 }

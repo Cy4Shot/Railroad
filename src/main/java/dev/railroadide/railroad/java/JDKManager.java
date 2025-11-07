@@ -255,9 +255,12 @@ public class JDKManager {
         switch (OperatingSystem.CURRENT) {
             case WINDOWS -> {
                 for (String basePath : WIN_JDK_PATHS) {
-                    for (char drive = 'A'; drive <= 'Z'; drive++) {
-                        String path = basePath.replace("{drive}", String.valueOf(drive));
-                        candidates.add(FileUtils.normalizePath(Path.of(path)));
+                    for (char drive = 'C'; drive <= 'Z'; drive++) { // Start from C, A/B are usually floppy
+                        Path driveRoot = Path.of(drive + ":\\");
+                        if (Files.exists(driveRoot)) {
+                            String path = basePath.replace("{drive}", String.valueOf(drive));
+                            candidates.add(FileUtils.normalizePath(Path.of(path)));
+                        }
                     }
                 }
             }
@@ -276,9 +279,6 @@ public class JDKManager {
                 candidates.add(FileUtils.normalizePath(Path.of("/usr/local/opt")));      // Intel
             }
             case LINUX -> LINUX_JDK_PATHS.forEach(path -> candidates.add(FileUtils.normalizePath(Path.of(path))));
-            case UNKNOWN -> {
-                // no default paths
-            }
         }
 
         String userHome = System.getProperty("user.home");

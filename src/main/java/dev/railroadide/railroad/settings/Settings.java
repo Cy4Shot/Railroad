@@ -148,6 +148,13 @@ public final class Settings {
         .defaultValue(List.of())
         .build());
 
+    public static final Setting<Long> JAVA_VERSION_DETECTION_TIMEOUT_MS = registerSetting(Setting.builder(Long.class, "railroad:java_version_detection_timeout_ms")
+        .treePath("ide")
+        .category(SettingCategory.simple("railroad:ide.jdk_management"))
+        .codec(DefaultSettingCodecs.LONG)
+        .defaultValue(3000L)
+        .build());
+
     public static void initialize() {
         // intentionally empty - triggers class loading and static init
     }

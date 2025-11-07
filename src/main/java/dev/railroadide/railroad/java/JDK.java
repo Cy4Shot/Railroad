@@ -101,6 +101,25 @@ public final class JDK {
             String rawName = jdk.name();
             String path = jdk.path().toAbsolutePath().toString().toLowerCase(Locale.ROOT);
             String name = (rawName == null ? "" : rawName).toLowerCase(Locale.ROOT);
+            Properties props = JDKUtils.readReleaseProperties(jdk.path());
+            String implVendor = props.getProperty("IMPLEMENTOR", "").toLowerCase(Locale.ROOT);
+            String vendor = props.getProperty("VENDOR", "").toLowerCase(Locale.ROOT);
+            for (Brand brand : values()) {
+                if (brand == UNKNOWN)
+                    continue;
+
+                if (implVendor.contains(brand.key) || vendor.contains(brand.key))
+                    return brand;
+
+                if (brand.aliases != null) {
+                    for (String alias : brand.aliases) {
+                        if (implVendor.contains(alias) || vendor.contains(alias))
+                            return brand;
+                    }
+                }
+            }
+
+            // If release properties are inconclusive, fall back to string matching on name and path
             for (Brand brand : values()) {
                 if (brand == UNKNOWN)
                     continue;
@@ -111,23 +130,6 @@ public final class JDK {
                 if (brand.aliases != null) {
                     for (String alias : brand.aliases) {
                         if (name.contains(alias) || path.contains(alias))
-                            return brand;
-                    }
-                }
-            }
-
-            Properties props = JDKUtils.readReleaseProperties(jdk.path());
-            String implVendor = props.getProperty("IMPLEMENTOR", "").toLowerCase(Locale.ROOT);
-            for (Brand brand : values()) {
-                if (brand == UNKNOWN)
-                    continue;
-
-                if (implVendor.contains(brand.key))
-                    return brand;
-
-                if (brand.aliases != null) {
-                    for (String alias : brand.aliases) {
-                        if (implVendor.contains(alias))
                             return brand;
                     }
                 }

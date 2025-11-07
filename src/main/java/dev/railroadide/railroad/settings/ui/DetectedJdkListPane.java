@@ -112,7 +112,7 @@ public class DetectedJdkListPane extends RRVBox {
                 } catch (Exception exception) {
                     Railroad.LOGGER.error("Failed to load image icon for JDK brand {}", brand.name(), exception);
                 }
-            } else if(brand.isIkon()) {
+            } else if (brand.isIkon()) {
                 var icon = new FontIcon(brand.getIcon());
                 icon.setIconSize(20);
                 iconView = icon;

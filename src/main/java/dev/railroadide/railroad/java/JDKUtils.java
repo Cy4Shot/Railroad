@@ -2,6 +2,7 @@ package dev.railroadide.railroad.java;
 
 import dev.railroadide.core.utility.OperatingSystem;
 import dev.railroadide.railroad.Railroad;
+import dev.railroadide.railroad.settings.Settings;
 import dev.railroadide.railroad.utility.JavaVersion;
 
 import java.io.BufferedReader;
@@ -263,7 +264,7 @@ public final class JDKUtils {
                 homeDir = bufferedReader.readLine();
             }
 
-            process.waitFor(300, TimeUnit.MILLISECONDS);
+            process.waitFor(Settings.JAVA_VERSION_DETECTION_TIMEOUT_MS.getOrDefaultValue(), TimeUnit.MILLISECONDS);
             if (homeDir == null || homeDir.isBlank())
                 return null;
 
@@ -310,14 +311,14 @@ public final class JDKUtils {
                         String versionStr = line.substring(q1 + 1, q2);
                         JavaVersion version = parseJavaVersionString(versionStr);
                         if (version != null) {
-                            process.waitFor(300, TimeUnit.MILLISECONDS);
+                            process.waitFor(Settings.JAVA_VERSION_DETECTION_TIMEOUT_MS.getOrDefaultValue(), TimeUnit.MILLISECONDS);
                             return version;
                         }
                     }
                 }
             }
 
-            process.waitFor(300, TimeUnit.MILLISECONDS);
+            process.waitFor(Settings.JAVA_VERSION_DETECTION_TIMEOUT_MS.getOrDefaultValue(), TimeUnit.MILLISECONDS);
         } catch (IOException ignored) {
         } catch (InterruptedException ignored) {
             Thread.currentThread().interrupt();
